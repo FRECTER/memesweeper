@@ -44,5 +44,6 @@ private:
 	/********************************/
 	/*  User Variables              */
 	MineField field;
+	bool inhibitClick = false;
 	/********************************/
 };

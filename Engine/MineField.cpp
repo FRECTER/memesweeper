@@ -29,6 +29,27 @@ void MineField::Tile::Draw(const Vec2& screenPos, Graphics& gfx) const {
 	}
 }
 
+void MineField::Tile::Open() {
+	assert(state == State::Hidden);
+	state = State::Open;
+}
+
+bool MineField::Tile::Opened() const {
+	return state == State::Open;
+}
+
+void MineField::Tile::Flag() {
+	assert(!Opened());
+	if (state == State::Flag)
+		state = State::Hidden;
+	else
+		state = State::Flag;
+}
+
+bool MineField::Tile::Flagged() const {
+	return state == State::Flag;
+}
+
 MineField::MineField(int mineNum) {
 	assert(mineNum > 0 && mineNum < width * height);
 	std::random_device rd;
@@ -42,6 +63,11 @@ MineField::MineField(int mineNum) {
 		while (TileAtPos(spawnPos).CheckMine());
 		TileAtPos(spawnPos).SpawnMine();
 	}
+	for (int i = 0; i < 120; i++) {
+		const Vec2 gridPos = { xDist(rng),yDist(rng) };
+		if (!TileAtPos(gridPos).Opened())
+			TileAtPos(gridPos).Open();
+	}
 }
 
 void MineField::Draw(Graphics& gfx) const {
@@ -54,6 +80,18 @@ void MineField::Draw(Graphics& gfx) const {
 
 Rect MineField::BoardRect() const {
 	return Rect(TL.x, TL.x + width * SpriteCodex::tileSize, TL.y, TL.y + height * SpriteCodex::tileSize);
+}
+
+void MineField::OpenTile(const Vec2& gridPos) {
+	if (TileAtPos(gridPos).GetState() == Tile::State::Hidden)
+		TileAtPos(gridPos).Open();
+}
+
+void MineField::FlagTile(const Vec2& gridPos) {
+	if (TileAtPos(gridPos).GetState() == Tile::State::Hidden)
+		TileAtPos(gridPos).Flag();
+	else if (TileAtPos(gridPos).GetState() == Tile::State::Flag)
+		TileAtPos(gridPos).Flag();
 }
 
 MineField::Tile& MineField::TileAtPos(const Vec2& pos) {

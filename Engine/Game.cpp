@@ -25,7 +25,7 @@ Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
 	gfx( wnd ),
-	field(9)
+	field(35)
 {
 }
 
@@ -38,6 +38,30 @@ void Game::Go()
 }
 
 void Game::UpdateModel() {
+	if (wnd.mouse.LeftIsPressed()) {
+		if (!inhibitClick) {
+			inhibitClick = true;
+			Vec2 click(wnd.mouse.GetPosX(), wnd.mouse.GetPosY());
+			const Rect rect = field.BoardRect();
+			if (click.x >= rect.left && click.x < rect.right + field.GetWidth() * SpriteCodex::tileSize &&
+				click.y >= rect.top && click.y < rect.bottom + field.GetHeight() * SpriteCodex::tileSize)
+				field.OpenTile((click - Vec2(rect.left, rect.top)) / SpriteCodex::tileSize);
+		}
+	}
+	else if (wnd.mouse.RightIsPressed()) {
+		if (!inhibitClick) {
+			inhibitClick = true;
+			Vec2 click(wnd.mouse.GetPosX(), wnd.mouse.GetPosY());
+			const Rect rect = field.BoardRect();
+			if (click.x >= rect.left && click.x < rect.right + field.GetWidth() * SpriteCodex::tileSize &&
+				click.y >= rect.top && click.y < rect.bottom + field.GetHeight() * SpriteCodex::tileSize) {
+				const Vec2 gridPos = (click - Vec2(rect.left, rect.top)) / SpriteCodex::tileSize;
+				field.FlagTile(gridPos);
+			}
+		}
+	}
+	else
+		inhibitClick = false;
 }
 
 void Game::ComposeFrame() {
