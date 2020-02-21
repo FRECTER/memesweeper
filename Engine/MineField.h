@@ -1,9 +1,10 @@
 #pragma once
+#include "Vec2.h"
 
 class MineField {
 private:
 	class Tile {
-	private:
+	public:
 		enum class State {
 			Hidden,
 			Flag,

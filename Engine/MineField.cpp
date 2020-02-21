@@ -1,5 +1,4 @@
 #include "MineField.h"
-#include "Vec2.h"
 #include <assert.h>
 #include <random>
 
