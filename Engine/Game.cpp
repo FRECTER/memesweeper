@@ -24,7 +24,8 @@
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
-	gfx( wnd )
+	gfx( wnd ),
+	field(9)
 {
 }
 
@@ -36,10 +37,9 @@ void Game::Go()
 	gfx.EndFrame();
 }
 
-void Game::UpdateModel()
-{
+void Game::UpdateModel() {
 }
 
-void Game::ComposeFrame()
-{
+void Game::ComposeFrame() {
+	field.Draw(gfx);
 }
