@@ -1,6 +1,7 @@
 #include "MineField.h"
 #include <assert.h>
 #include <random>
+#include <algorithm>
 
 void MineField::Tile::SpawnMine() {
 	assert(!hasMine);
@@ -22,7 +23,7 @@ void MineField::Tile::Draw(const Vec2& screenPos, Graphics& gfx) const {
 		break;
 	case State::Open:
 		if (!hasMine)
-			SpriteCodex::DrawTile0(screenPos, gfx);
+			SpriteCodex::DrawTileChoose(screenPos, adjMineNum, gfx);
 		else
 			SpriteCodex::DrawTileBomb(screenPos, gfx);
 		break;
@@ -50,6 +51,11 @@ bool MineField::Tile::Flagged() const {
 	return state == State::Flag;
 }
 
+void MineField::Tile::SetMineCount(int mineCount) {
+	assert(adjMineNum == -1);
+	adjMineNum = mineCount;
+}
+
 MineField::MineField(int mineNum) {
 	assert(mineNum > 0 && mineNum < width * height);
 	std::random_device rd;
@@ -62,6 +68,10 @@ MineField::MineField(int mineNum) {
 			spawnPos = { xDist(rng),yDist(rng) };
 		while (TileAtPos(spawnPos).CheckMine());
 		TileAtPos(spawnPos).SpawnMine();
+	}
+	for (Vec2 gPos = { 0,0 }; gPos.y < height; gPos.y++) {
+		for (gPos.x = 0; gPos.x < width; gPos.x++)
+			TileAtPos(gPos).SetMineCount(CountAdjMine(gPos));
 	}
 }
 
@@ -87,6 +97,22 @@ void MineField::FlagTile(const Vec2& gridPos) {
 		TileAtPos(gridPos).Flag();
 	else if (TileAtPos(gridPos).GetState() == Tile::State::Flag)
 		TileAtPos(gridPos).Flag();
+}
+
+int MineField::CountAdjMine(const Vec2& gridPos) {
+	const int xMin = std::max(0, gridPos.x - 1);
+	const int xMax = std::min(width - 1, gridPos.x + 1);
+	const int yMin = std::max(0, gridPos.y - 1);
+	const int yMax = std::min(height - 1, gridPos.y + 1);
+
+	int count = 0;
+	for (Vec2 pos = { xMin,yMin }; pos.y <= yMax; pos.y++) {
+		for (pos.x = xMin; pos.x <= xMax; pos.x++) {
+			if (TileAtPos(pos).CheckMine())
+				count++;
+		}
+	}
+	return count;
 }
 
 MineField::Tile& MineField::TileAtPos(const Vec2& pos) {

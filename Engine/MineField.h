@@ -24,9 +24,11 @@ private:
 		bool Opened() const;
 		void Flag();
 		bool Flagged() const;
+		void SetMineCount(int mineCount);
 	private:
 		State state = State::Hidden;
 		bool hasMine = false;
+		int adjMineNum = -1;
 	};
 public:
 	MineField(int mineNum);
@@ -40,6 +42,7 @@ public:
 	}
 	void OpenTile(const Vec2& gridPos);
 	void FlagTile(const Vec2& gridPos);
+	int CountAdjMine(const Vec2& gridPos);
 private:
 	Tile& TileAtPos(const Vec2& pos);
 	const Tile& TileAtPos(const Vec2& pos) const;
