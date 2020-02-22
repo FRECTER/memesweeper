@@ -44,7 +44,7 @@ private:
 	/********************************/
 	/*  User Variables              */
 	MineField field;
-	static constexpr int totalMineNum = 30;
+	static constexpr int totalMineNum = 100;
 	bool gameWon = false;
 	bool gameLost = false;
 	/********************************/
