@@ -56,6 +56,10 @@ void MineField::Tile::SetMineCount(int mineCount) {
 	adjMineNum = mineCount;
 }
 
+int MineField::Tile::GetMineCount() const {
+	return adjMineNum;
+}
+
 MineField::MineField(int mineNum) {
 	assert(mineNum > 0 && mineNum < width * height);
 	std::random_device rd;
@@ -88,8 +92,21 @@ Rect MineField::BoardRect() const {
 }
 
 void MineField::OpenTile(const Vec2& gridPos) {
-	if (TileAtPos(gridPos).GetState() == Tile::State::Hidden)
+	if (TileAtPos(gridPos).GetState() == Tile::State::Hidden) {
 		TileAtPos(gridPos).Open();
+		if (TileAtPos(gridPos).GetMineCount() == 0) {
+			const int xMin = std::max(0, gridPos.x - 1);
+			const int xMax = std::min(width - 1, gridPos.x + 1);
+			const int yMin = std::max(0, gridPos.y - 1);
+			const int yMax = std::min(height - 1, gridPos.y + 1);
+			for (Vec2 pos = { xMin,yMin }; pos.y <= yMax; pos.y++) {
+				for (pos.x = xMin; pos.x <= xMax; pos.x++) {
+					if (pos != gridPos)
+						OpenTile(pos);
+				}
+			}
+		}
+	}
 }
 
 void MineField::FlagTile(const Vec2& gridPos) {

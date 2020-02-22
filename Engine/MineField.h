@@ -25,6 +25,7 @@ private:
 		void Flag();
 		bool Flagged() const;
 		void SetMineCount(int mineCount);
+		int GetMineCount() const;
 	private:
 		State state = State::Hidden;
 		bool hasMine = false;
