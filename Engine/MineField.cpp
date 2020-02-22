@@ -63,11 +63,6 @@ MineField::MineField(int mineNum) {
 		while (TileAtPos(spawnPos).CheckMine());
 		TileAtPos(spawnPos).SpawnMine();
 	}
-	for (int i = 0; i < 120; i++) {
-		const Vec2 gridPos = { xDist(rng),yDist(rng) };
-		if (!TileAtPos(gridPos).Opened())
-			TileAtPos(gridPos).Open();
-	}
 }
 
 void MineField::Draw(Graphics& gfx) const {
