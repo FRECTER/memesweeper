@@ -25,8 +25,10 @@ void MineField::Tile::Draw(const Vec2& screenPos, Graphics& gfx) const {
 		if (!hasMine)
 			SpriteCodex::DrawTileChoose(screenPos, adjMineNum, gfx);
 		else
-			SpriteCodex::DrawTileBomb(screenPos, gfx);
+			SpriteCodex::DrawTileBombRed(screenPos, gfx);
 		break;
+	case State::BombWin:
+		SpriteCodex::DrawTileBomb(screenPos, gfx);
 	}
 }
 
@@ -58,6 +60,10 @@ void MineField::Tile::SetMineCount(int mineCount) {
 
 int MineField::Tile::GetMineCount() const {
 	return adjMineNum;
+}
+
+void MineField::Tile::SetBombWin() {
+	state = State::BombWin;
 }
 
 MineField::MineField(int mineNum) {
@@ -130,6 +136,50 @@ int MineField::CountAdjMine(const Vec2& gridPos) {
 		}
 	}
 	return count;
+}
+
+bool MineField::CheckWon(int totalMineNum) const {
+	int countFlaggedMines = 0;
+	int countOpened = 0;
+	int countFlagged = 0;
+	for (const Tile& tiles : field) {
+		if (tiles.Flagged() && tiles.CheckMine())
+			countFlaggedMines++;
+		if (tiles.Flagged())
+			countFlagged++;
+		if (tiles.Opened())
+			countOpened++;
+	}
+	if ((countFlaggedMines == totalMineNum && countFlagged == totalMineNum) || countOpened == width * height - totalMineNum)
+		return true;
+	else
+		return false;
+}
+
+bool MineField::CheckLost() const {
+	for (const Tile& tiles : field) {
+		if (tiles.CheckMine() && tiles.Opened())
+			return true;
+	}
+	return false;
+}
+
+void MineField::RevealBombsLost() {
+	for (int i = 0; i < width * height; i++) {
+		if (field[i].Flagged())
+			field[i].Flag();
+		if (field[i].CheckMine() && !field[i].Opened())
+			field[i].Open();
+	}
+}
+
+void MineField::RevealBombsWon() {
+	for (int i = 0; i < width * height; i++) {
+		if (field[i].Flagged())
+			field[i].Flag();
+		if (field[i].CheckMine())
+			field[i].SetBombWin();
+	}
 }
 
 MineField::Tile& MineField::TileAtPos(const Vec2& pos) {

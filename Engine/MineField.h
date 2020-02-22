@@ -11,7 +11,8 @@ private:
 		enum class State {
 			Hidden,
 			Flag,
-			Open
+			Open,
+			BombWin
 		};
 	public:
 		void SpawnMine();
@@ -26,6 +27,7 @@ private:
 		bool Flagged() const;
 		void SetMineCount(int mineCount);
 		int GetMineCount() const;
+		void SetBombWin();
 	private:
 		State state = State::Hidden;
 		bool hasMine = false;
@@ -44,12 +46,16 @@ public:
 	void OpenTile(const Vec2& gridPos);
 	void FlagTile(const Vec2& gridPos);
 	int CountAdjMine(const Vec2& gridPos);
+	bool CheckWon(int TotalMineNum) const;
+	bool CheckLost() const;
+	void RevealBombsLost();
+	void RevealBombsWon();
 private:
 	Tile& TileAtPos(const Vec2& pos);
 	const Tile& TileAtPos(const Vec2& pos) const;
 private:
-	static constexpr int width = 20;
-	static constexpr int height = 10;
+	static constexpr int width = 30;
+	static constexpr int height = 30;
 	Vec2 TL = Vec2((Graphics::ScreenWidth - width * SpriteCodex::tileSize) / 2,
 				   (Graphics::ScreenHeight - height * SpriteCodex::tileSize) / 2);
 	Tile field[width * height];
