@@ -38,30 +38,23 @@ void Game::Go()
 }
 
 void Game::UpdateModel() {
-	if (wnd.mouse.LeftIsPressed()) {
-		if (!inhibitClick) {
-			inhibitClick = true;
+	while (!wnd.mouse.IsEmpty()) {
+		const Mouse::Event e = wnd.mouse.Read();
+		if (e.GetType() == Mouse::Event::Type::LPress) {
 			Vec2 click(wnd.mouse.GetPosX(), wnd.mouse.GetPosY());
 			const Rect rect = field.BoardRect();
 			if (click.x >= rect.left && click.x < rect.right + field.GetWidth() * SpriteCodex::tileSize &&
 				click.y >= rect.top && click.y < rect.bottom + field.GetHeight() * SpriteCodex::tileSize)
 				field.OpenTile((click - Vec2(rect.left, rect.top)) / SpriteCodex::tileSize);
 		}
-	}
-	else if (wnd.mouse.RightIsPressed()) {
-		if (!inhibitClick) {
-			inhibitClick = true;
+		else if (e.GetType() == Mouse::Event::Type::RPress) {
 			Vec2 click(wnd.mouse.GetPosX(), wnd.mouse.GetPosY());
 			const Rect rect = field.BoardRect();
 			if (click.x >= rect.left && click.x < rect.right + field.GetWidth() * SpriteCodex::tileSize &&
-				click.y >= rect.top && click.y < rect.bottom + field.GetHeight() * SpriteCodex::tileSize) {
-				const Vec2 gridPos = (click - Vec2(rect.left, rect.top)) / SpriteCodex::tileSize;
-				field.FlagTile(gridPos);
-			}
+				click.y >= rect.top && click.y < rect.bottom + field.GetHeight() * SpriteCodex::tileSize)
+				field.FlagTile((click - Vec2(rect.left, rect.top)) / SpriteCodex::tileSize);
 		}
 	}
-	else
-		inhibitClick = false;
 }
 
 void Game::ComposeFrame() {
