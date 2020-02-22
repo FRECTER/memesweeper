@@ -166,7 +166,7 @@ bool MineField::CheckLost() const {
 
 void MineField::RevealBombsLost() {
 	for (int i = 0; i < width * height; i++) {
-		if (field[i].Flagged())
+		if (field[i].Flagged() && field[i].CheckMine())
 			field[i].Flag();
 		if (field[i].CheckMine() && !field[i].Opened())
 			field[i].Open();
@@ -179,6 +179,13 @@ void MineField::RevealBombsWon() {
 			field[i].Flag();
 		if (field[i].CheckMine())
 			field[i].SetBombWin();
+	}
+}
+
+void MineField::DrawCross(Graphics& gfx) {
+	for (int i = 0; i < width * height; i++) {
+		if (field[i].Flagged() && !field[i].CheckMine())
+			SpriteCodex::DrawTileCross(Vec2(i % width, i / width) * SpriteCodex::tileSize + TL, gfx);
 	}
 }
 

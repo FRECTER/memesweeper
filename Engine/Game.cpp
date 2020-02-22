@@ -67,4 +67,6 @@ void Game::UpdateModel() {
 
 void Game::ComposeFrame() {
 	field.Draw(gfx);
+	if (gameLost)
+		field.DrawCross(gfx);
 }

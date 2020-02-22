@@ -50,6 +50,7 @@ public:
 	bool CheckLost() const;
 	void RevealBombsLost();
 	void RevealBombsWon();
+	void DrawCross(Graphics& gfx);
 private:
 	Tile& TileAtPos(const Vec2& pos);
 	const Tile& TileAtPos(const Vec2& pos) const;
