@@ -55,8 +55,8 @@ private:
 	Tile& TileAtPos(const Vec2& pos);
 	const Tile& TileAtPos(const Vec2& pos) const;
 private:
-	static constexpr int width = 30;
-	static constexpr int height = 30;
+	static constexpr int width = 15;
+	static constexpr int height = 15;
 	Vec2 TL = Vec2((Graphics::ScreenWidth - width * SpriteCodex::tileSize) / 2,
 				   (Graphics::ScreenHeight - height * SpriteCodex::tileSize) / 2);
 	Tile field[width * height];

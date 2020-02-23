@@ -67,6 +67,10 @@ void Game::UpdateModel() {
 
 void Game::ComposeFrame() {
 	field.Draw(gfx);
-	if (gameLost)
+	if (gameWon)
+		SpriteCodex::DrawWin(Vec2(Graphics::ScreenWidth / 2, Graphics::ScreenHeight / 2), gfx);
+	else if (gameLost) {
 		field.DrawCross(gfx);
+
+	}
 }
