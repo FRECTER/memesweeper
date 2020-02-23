@@ -86,6 +86,7 @@ MineField::MineField(int mineNum) {
 }
 
 void MineField::Draw(Graphics& gfx) const {
+	DrawBackGround(gfx);
 	gfx.DrawRect(BoardRect(), SpriteCodex::baseColor);
 	for (Vec2 gPos = { 0,0 }; gPos.y < height; gPos.y++) {
 		for (gPos.x = 0; gPos.x < width; gPos.x++)
@@ -95,6 +96,11 @@ void MineField::Draw(Graphics& gfx) const {
 
 Rect MineField::BoardRect() const {
 	return Rect(TL.x, TL.x + width * SpriteCodex::tileSize, TL.y, TL.y + height * SpriteCodex::tileSize);
+}
+
+void MineField::DrawBackGround(Graphics& gfx) const {
+	Rect back = Rect(TL.x - 5, TL.x + width * SpriteCodex::tileSize + 5, TL.y - 5, TL.y + height * SpriteCodex::tileSize + 5);
+	gfx.DrawRect(back, Colors::MakeRGB(SpriteCodex::baseColor.GetR() / 2, SpriteCodex::baseColor.GetG() / 2, SpriteCodex::baseColor.GetB() / 2));
 }
 
 void MineField::OpenTile(const Vec2& gridPos) {

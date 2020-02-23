@@ -37,6 +37,7 @@ public:
 	MineField(int mineNum);
 	void Draw(Graphics& gfx) const;
 	Rect BoardRect() const;
+	void DrawBackGround(Graphics& gfx) const;
 	int GetWidth() const {
 		return width;
 	}
