@@ -38,24 +38,26 @@ void Game::Go()
 }
 
 void Game::UpdateModel() {
-	gameWon = field.CheckWon(totalMineNum);
-	gameLost = field.CheckLost();
 	if (!gameWon && !gameLost) {
-		while (!wnd.mouse.IsEmpty()) {
-			const Mouse::Event e = wnd.mouse.Read();
-			if (e.GetType() == Mouse::Event::Type::LPress) {
-				Vec2 click(wnd.mouse.GetPosX(), wnd.mouse.GetPosY());
-				const Rect rect = field.BoardRect();
-				if (click.x >= rect.left && click.x < rect.right + field.GetWidth() * SpriteCodex::tileSize &&
-					click.y >= rect.top && click.y < rect.bottom + field.GetHeight() * SpriteCodex::tileSize)
-					field.OpenTile((click - Vec2(rect.left, rect.top)) / SpriteCodex::tileSize);
-			}
-			else if (e.GetType() == Mouse::Event::Type::RPress) {
-				Vec2 click(wnd.mouse.GetPosX(), wnd.mouse.GetPosY());
-				const Rect rect = field.BoardRect();
-				if (click.x >= rect.left && click.x < rect.right + field.GetWidth() * SpriteCodex::tileSize &&
-					click.y >= rect.top && click.y < rect.bottom + field.GetHeight() * SpriteCodex::tileSize)
-					field.FlagTile((click - Vec2(rect.left, rect.top)) / SpriteCodex::tileSize);
+		gameWon = field.CheckWon(totalMineNum);
+		gameLost = field.CheckLost();
+		if (!gameWon && !gameLost) {
+			while (!wnd.mouse.IsEmpty()) {
+				const Mouse::Event e = wnd.mouse.Read();
+				if (e.GetType() == Mouse::Event::Type::LPress) {
+					Vec2 click(wnd.mouse.GetPosX(), wnd.mouse.GetPosY());
+					const Rect rect = field.BoardRect();
+					if (click.x >= rect.left && click.x < rect.right + field.GetWidth() * SpriteCodex::tileSize &&
+						click.y >= rect.top && click.y < rect.bottom + field.GetHeight() * SpriteCodex::tileSize)
+						field.OpenTile((click - Vec2(rect.left, rect.top)) / SpriteCodex::tileSize);
+				}
+				else if (e.GetType() == Mouse::Event::Type::RPress) {
+					Vec2 click(wnd.mouse.GetPosX(), wnd.mouse.GetPosY());
+					const Rect rect = field.BoardRect();
+					if (click.x >= rect.left && click.x < rect.right + field.GetWidth() * SpriteCodex::tileSize &&
+						click.y >= rect.top && click.y < rect.bottom + field.GetHeight() * SpriteCodex::tileSize)
+						field.FlagTile((click - Vec2(rect.left, rect.top)) / SpriteCodex::tileSize);
+				}
 			}
 		}
 	}
@@ -69,8 +71,6 @@ void Game::ComposeFrame() {
 	field.Draw(gfx);
 	if (gameWon)
 		SpriteCodex::DrawWin(Vec2(Graphics::ScreenWidth / 2, Graphics::ScreenHeight / 2), gfx);
-	else if (gameLost) {
+	else if (gameLost)
 		field.DrawCross(gfx);
-
-	}
 }
